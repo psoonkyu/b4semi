@@ -1,0 +1,851 @@
+ID : b4semi
+PW : semi
+
+CREATE TABLE Member (
+	memberSeq	NUMBER		NOT NULL,
+	memberId	VARCHAR2(16)		NULL,
+	memberGradeCode	VARCHAR2(8)		NOT NULL,
+	memberpw	VARCHAR2(128)		NULL,
+	memberName	VARCHAR2(21)		NULL,
+	memberemail	VARCHAR2(32)		NULL,
+	memberphone	VARCHAR2(14)		NULL,
+	membercomment	VARCHAR2(100)		NULL,
+	memberenrolldate	TIMESTAMP		NULL,
+	memberquitdate	TIMESTAMP		NULL,
+	membermileage	NUMBER		NULL,
+	memberValidation	VARCHAR2(1)	DEFAULT 'N'	NULL
+);
+
+CREATE TABLE MemberGrade (
+	memberGradeCode	VARCHAR2(8)		NOT NULL,
+	memberGradeName	VARCHAR2(24)		NULL,
+	gradeRate	NUMBER		NULL
+);
+
+CREATE TABLE Product (
+	productCode	VARCHAR2(30)		NOT NULL,
+	supplierCode	VARCHAR2(30)		NOT NULL,
+	productName	VARCHAR2(70)		NULL,
+	originCountry	VARCHAR2(27)		NULL,
+	subCategoryCode	VARCHAR2(8)		NOT NULL,
+	productUnit	VARCHAR2(12)		NULL
+);
+
+CREATE TABLE InStock (
+	instockSeq	NUMBER		NOT NULL,
+	productCode	VARCHAR2(30)		NOT NULL,
+	inStockDate	TIMESTAMP		NULL,
+	inStockCount	NUMBER		NULL,
+	inStockPrice	NUMBER		NULL,
+	expiryDate	TIMESTAMP		NULL,
+	remainStockCount	NUMBER		NULL,
+	expiredStockCount	NUMBER		NULL
+);
+
+CREATE TABLE supplier (
+	supplierCode	VARCHAR2(30)		NOT NULL,
+	supplierName	VARCHAR2(42)		NULL,
+	supplierPhone	VARCHAR2(14)		NULL,
+	supplierAddress	VARCHAR2(200)		NULL,
+	supplierEmail	VARCHAR2(32)		NULL
+);
+
+CREATE TABLE DPList (
+	displayListSeq	NUMBER		NOT NULL,
+	displayListTitle	VARCHAR2(128)		NULL,
+	displayListContents	VARCHAR2(4000)		NULL,
+	DPListAvailable	VARCHAR2(1)	DEFAULT 'Y'	NOT NULL,
+	displayDate	TIMESTAMP		NOT NULL
+);
+
+CREATE TABLE majorCategory (
+	majorCategoryCode	VARCHAR2(8)		NOT NULL,
+	majorCategoryName	VARCHAR2(30)		NULL
+);
+
+CREATE TABLE DPOption (
+	productCode	VARCHAR2(30)		NOT NULL,
+	displayListSeq	NUMBER		NOT NULL,
+	discountCode	VARCHAR2(30)		NULL,
+	displayOptionPrice	NUMBER		NULL,
+	OptionAvailable	VARCHAR2(1)	DEFAULT 'Y'	NOT NULL
+);
+
+CREATE TABLE AddressList (
+	addressSeq	NUMBER		NOT NULL,
+	memberSeq	NUMBER		NOT NULL,
+	addressTag	VARCHAR2(30)		NULL,
+	address	VARCHAR2(200)		NULL,
+	addressPhone	VARCHAR2(14)		NULL
+);
+
+CREATE TABLE cart (
+	memberSeq	NUMBER		NOT NULL,
+	productCode	VARCHAR2(30)		NOT NULL,
+	displayListSeq	NUMBER		NOT NULL,
+	productCount	NUMBER		NULL
+);
+
+CREATE TABLE discount (
+	discountCode	VARCHAR2(30)		NOT NULL,
+	discountName	VARCHAR2(30)		NULL,
+	discountRate	NUMBER		NULL
+);
+
+CREATE TABLE orderPDetail (
+	orderSeq	NUMBER		NOT NULL,
+	productCode	VARCHAR2(30)		NOT NULL,
+	displayListSeq	NUMBER		NOT NULL,
+	orderProductCount	NUMBER		NULL
+);
+
+CREATE TABLE CouponMaster (
+	CouponCode	VARCHAR2(30)		NOT NULL,
+	CouponName	VARCHAR2(50)		NULL,
+	DiscountRate	NUMBER		NULL,
+	MinPrice	NUMBER		NULL,
+	MaxdisPrice	NUMBER		NULL,
+	limitDate	TIMESTAMP		NULL
+);
+
+CREATE TABLE issuedCoupon (
+	CouponSeq	NUMBER		NOT NULL,
+	memberSeq	NUMBER		NOT NULL,
+	CouponCode	VARCHAR2(30)		NOT NULL,
+	isUsed	VARCHAR2(1)	DEFAULT 'Y'	NULL,
+	issueDate	TIMESTAMP		NULL
+);
+
+CREATE TABLE orderList (
+	orderSeq	NUMBER		NOT NULL,
+	CouponSeq	NUMBER		NULL,
+	memberSeq	NUMBER		NOT NULL,
+	orderStatusCode	VARCHAR2(8)		NOT NULL,
+	spentMileage	NUMBER		NULL,
+	receiverName	VARCHAR2(21)		NULL,
+	receiverAddress	VARCHAR2(200)		NULL,
+	receiverPhone	VARCHAR2(14)		NULL,
+	receiverComment	VARCHAR2(90)		NULL,
+	shipmentNo	VARCHAR2(12)		NULL,
+	totalPrice	NUMBER		NOT NULL,
+	cancelPrice	NUMBER		NULL
+);
+
+CREATE TABLE orderChange (
+	orderChangeSeq	NUMBER		NOT NULL,
+	orderSeq	NUMBER		NOT NULL,
+	productCode	VARCHAR2(30)		NOT NULL,
+	cancelStatusCode	VARCHAR2(8)		NOT NULL,
+	cancelCount	NUMBER		NULL,
+	reshipmentNo	VARCHAR2(12)		NULL,
+	displayListSeq	NUMBER		NOT NULL
+);
+
+CREATE TABLE orderStatus (
+	orderStatusCode	VARCHAR2(8)		NOT NULL,
+	orderStatusName	VARCHAR2(24)		NULL
+);
+
+CREATE TABLE cancelStatus (
+	cancelStatusCode	VARCHAR2(8)		NOT NULL,
+	cancelStatusName	VARCHAR2(24)		NULL
+);
+
+CREATE TABLE QueryBoard (
+	querySeq	NUMBER		NOT NULL,
+	memberSeq	NUMBER		NOT NULL,
+	queryTitle	VARCHAR2(128)		NULL,
+	queryContents	VARCHAR2(4000)		NULL,
+	queryDate	TIMESTAMP		NULL,
+	queryDeleteDate	TIMESTAMP		NULL
+);
+
+CREATE TABLE Reply (
+	commentSeq	NUMBER		NOT NULL,
+	boardSeq	NUMBER		NOT NULL,
+	memberSeq	NUMBER		NOT NULL,
+	commentRef	NUMBER		NULL,
+	commentDate	TIMESTAMP		NULL,
+	commentText	VARCHAR2(1500)		NULL,
+	commentLevel	NUMBER	DEFAULT 1	NOT NULL,
+	commentDeleteDate	TIMESTAMP		NULL
+);
+
+CREATE TABLE couponlog (
+	CouponLogSeq	NUMBER		NOT NULL,
+	CouponSeq	NUMBER		NOT NULL,
+	couponStatusChangeCode	VARCHAR2(8)		NOT NULL,
+	couponLogDate	TIMESTAMP		NULL,
+	couponLogChange	VARCHAR2(3)		NULL
+);
+
+CREATE TABLE couponStatusChange (
+	couponStatusChangeCode	VARCHAR2(8)		NOT NULL,
+	couponStatusChangeName	VARCHAR2(21)		NULL
+);
+
+CREATE TABLE mileageLog (
+	mileageLogSeq	NUMBER		NOT NULL,
+	mileageLogType	VARCHAR2(8)		NOT NULL,
+	memberSeq	NUMBER		NOT NULL,
+	logDate	TIMESTAMP		NULL,
+	preMileage	NUMBER		NULL,
+	nextMileage	NUMBER		NULL
+);
+
+CREATE TABLE mileageType (
+	mileageLogType	VARCHAR2(8)		NOT NULL,
+	logTypeName	VARCHAR2(24)		NULL
+);
+
+CREATE TABLE subCategory (
+	subCategoryCode	VARCHAR2(8)		NOT NULL,
+	majorCategoryCode	VARCHAR2(8)		NOT NULL,
+	subCategoryName	VARCHAR2(30)		NULL
+);
+
+CREATE TABLE Notice (
+	noticeSeq	NUMBER		NOT NULL,
+	memberSeq	NUMBER		NOT NULL,
+	noticeTitle	VARCHAR2(128)		NULL,
+	noticeContents	VARCHAR2(4000)		NULL,
+	noticeDate	TIMESTAMP		NULL,
+	noticeDeleteDate	TIMESTAMP		NULL,
+	noticeReadCount	NUMBER		NULL
+);
+
+CREATE TABLE Review (
+	reviewSeq	NUMBER		NOT NULL,
+	memberSeq	NUMBER		NOT NULL,
+	reviewTitle	VARCHAR2(128)		NULL,
+	reviewContents	VARCHAR2(4000)		NULL,
+	reviewDate	TIMESTAMP		NULL,
+	reviewDeleteDate	TIMESTAMP		NULL,
+	reviewScore	NUMBER		NULL,
+	productCode	VARCHAR2(30)		NOT NULL,
+	displayListSeq	NUMBER		NOT NULL
+);
+
+CREATE TABLE Images (
+	renameFile	VARCHAR2(100)		NOT NULL,
+	originalFile	VARCHAR2(100)		NULL,
+	boardCode	VARCHAR2(10)		NOT NULL,
+	boardNo	NUMBER		NOT NULL
+);
+
+CREATE TABLE boardType (
+	boardCode	VARCHAR2(10)		NOT NULL,
+	boardName	VARCHAR2(20)		NULL
+);
+
+CREATE TABLE MemberLog (
+	memberLogSeq	NUMBER		NOT NULL,
+	memberSeq	NUMBER		NOT NULL,
+	logDate	TIMESTAMP		NULL,
+	logStringPre	VARCHAR2(500)		NULL,
+	logStringNext	VARCHAR2(500)		NULL,
+	logIP	VARCHAR2(20)		NULL
+);
+
+ALTER TABLE Member ADD CONSTRAINT PK_MEMBER PRIMARY KEY (
+	memberSeq
+);
+
+ALTER TABLE MemberGrade ADD CONSTRAINT PK_MEMBERGRADE PRIMARY KEY (
+	memberGradeCode
+);
+
+ALTER TABLE Product ADD CONSTRAINT PK_PRODUCT PRIMARY KEY (
+	productCode
+);
+
+ALTER TABLE InStock ADD CONSTRAINT PK_INSTOCK PRIMARY KEY (
+	instockSeq
+);
+
+ALTER TABLE supplier ADD CONSTRAINT PK_SUPPLIER PRIMARY KEY (
+	supplierCode
+);
+
+ALTER TABLE DPList ADD CONSTRAINT PK_DPLIST PRIMARY KEY (
+	displayListSeq
+);
+
+ALTER TABLE majorCategory ADD CONSTRAINT PK_MAJORCATEGORY PRIMARY KEY (
+	majorCategoryCode
+);
+
+ALTER TABLE DPOption ADD CONSTRAINT PK_DPOPTION PRIMARY KEY (
+	productCode,
+	displayListSeq
+);
+
+ALTER TABLE AddressList ADD CONSTRAINT PK_ADDRESSLIST PRIMARY KEY (
+	addressSeq
+);
+
+ALTER TABLE cart ADD CONSTRAINT PK_CART PRIMARY KEY (
+	memberSeq,
+	productCode,
+	displayListSeq
+);
+
+ALTER TABLE discount ADD CONSTRAINT PK_DISCOUNT PRIMARY KEY (
+	discountCode
+);
+
+ALTER TABLE orderPDetail ADD CONSTRAINT PK_ORDERPDETAIL PRIMARY KEY (
+	orderSeq,
+	productCode,
+	displayListSeq
+);
+
+ALTER TABLE CouponMaster ADD CONSTRAINT PK_COUPONMASTER PRIMARY KEY (
+	CouponCode
+);
+
+ALTER TABLE issuedCoupon ADD CONSTRAINT PK_ISSUEDCOUPON PRIMARY KEY (
+	CouponSeq
+);
+
+ALTER TABLE orderList ADD CONSTRAINT PK_ORDERLIST PRIMARY KEY (
+	orderSeq
+);
+
+ALTER TABLE orderChange ADD CONSTRAINT PK_ORDERCHANGE PRIMARY KEY (
+	orderChangeSeq
+);
+
+ALTER TABLE orderStatus ADD CONSTRAINT PK_ORDERSTATUS PRIMARY KEY (
+	orderStatusCode
+);
+
+ALTER TABLE cancelStatus ADD CONSTRAINT PK_CANCELSTATUS PRIMARY KEY (
+	cancelStatusCode
+);
+
+ALTER TABLE QueryBoard ADD CONSTRAINT PK_QUERYBOARD PRIMARY KEY (
+	querySeq
+);
+
+ALTER TABLE Reply ADD CONSTRAINT PK_REPLY PRIMARY KEY (
+	commentSeq
+);
+
+ALTER TABLE couponlog ADD CONSTRAINT PK_COUPONLOG PRIMARY KEY (
+	CouponLogSeq
+);
+
+ALTER TABLE couponStatusChange ADD CONSTRAINT PK_COUPONSTATUSCHANGE PRIMARY KEY (
+	couponStatusChangeCode
+);
+
+ALTER TABLE mileageLog ADD CONSTRAINT PK_MILEAGELOG PRIMARY KEY (
+	mileageLogSeq
+);
+
+ALTER TABLE mileageType ADD CONSTRAINT PK_MILEAGETYPE PRIMARY KEY (
+	mileageLogType
+);
+
+ALTER TABLE subCategory ADD CONSTRAINT PK_SUBCATEGORY PRIMARY KEY (
+	subCategoryCode
+);
+
+ALTER TABLE Notice ADD CONSTRAINT PK_NOTICE PRIMARY KEY (
+	noticeSeq
+);
+
+ALTER TABLE Review ADD CONSTRAINT PK_REVIEW PRIMARY KEY (
+	reviewSeq
+);
+
+ALTER TABLE Images ADD CONSTRAINT PK_IMAGES PRIMARY KEY (
+	renameFile
+);
+
+ALTER TABLE boardType ADD CONSTRAINT PK_BOARDTYPE PRIMARY KEY (
+	boardCode
+);
+
+ALTER TABLE MemberLog ADD CONSTRAINT PK_MEMBERLOG PRIMARY KEY (
+	memberLogSeq
+);
+
+ALTER TABLE Member ADD 
+FOREIGN KEY (
+	memberGradeCode
+)
+REFERENCES MemberGrade (
+	memberGradeCode
+);
+
+ALTER TABLE Product ADD 
+FOREIGN KEY (
+	supplierCode
+)
+REFERENCES supplier (
+	supplierCode
+);
+
+ALTER TABLE Product ADD 
+FOREIGN KEY (
+	subCategoryCode
+)
+REFERENCES subCategory (
+	subCategoryCode
+);
+
+ALTER TABLE InStock ADD 
+FOREIGN KEY (
+	productCode
+)
+REFERENCES Product (
+	productCode
+);
+
+ALTER TABLE DPOption ADD 
+FOREIGN KEY (
+	productCode
+)
+REFERENCES Product (
+	productCode
+);
+
+ALTER TABLE DPOption ADD 
+FOREIGN KEY (
+	displayListSeq
+)
+REFERENCES DPList (
+	displayListSeq
+);
+
+ALTER TABLE DPOption ADD 
+FOREIGN KEY (
+	discountCode
+)
+REFERENCES discount (
+	discountCode
+);
+
+ALTER TABLE AddressList ADD 
+FOREIGN KEY (
+	memberSeq
+)
+REFERENCES Member (
+	memberSeq
+);
+
+ALTER TABLE cart ADD 
+FOREIGN KEY (
+	memberSeq
+)
+REFERENCES Member (
+	memberSeq
+);
+
+ALTER TABLE cart ADD 
+FOREIGN KEY (
+	productCode, displayListSeq
+)
+REFERENCES DPOption (
+	productCode, displayListSeq
+);
+
+
+ALTER TABLE orderPDetail ADD 
+FOREIGN KEY (
+	orderSeq
+)
+REFERENCES orderList (
+	orderSeq
+);
+
+ALTER TABLE orderPDetail ADD 
+FOREIGN KEY (
+	productCode, displayListSeq
+)
+REFERENCES DPOption (
+	productCode, displayListSeq
+);
+
+
+ALTER TABLE issuedCoupon ADD 
+FOREIGN KEY (
+	memberSeq
+)
+REFERENCES Member (
+	memberSeq
+);
+
+ALTER TABLE issuedCoupon ADD 
+FOREIGN KEY (
+	CouponCode
+)
+REFERENCES CouponMaster (
+	CouponCode
+);
+
+ALTER TABLE orderList ADD 
+FOREIGN KEY (
+	CouponSeq
+)
+REFERENCES issuedCoupon (
+	CouponSeq
+);
+
+ALTER TABLE orderList ADD 
+FOREIGN KEY (
+	memberSeq
+)
+REFERENCES Member (
+	memberSeq
+);
+
+ALTER TABLE orderList ADD 
+FOREIGN KEY (
+	orderStatusCode
+)
+REFERENCES orderStatus (
+	orderStatusCode
+);
+
+ALTER TABLE orderChange ADD 
+FOREIGN KEY (
+	orderSeq, productCode, displayListSeq
+)
+REFERENCES orderPDetail (
+	orderSeq, productCode, displayListSeq
+);
+
+ALTER TABLE orderChange ADD 
+FOREIGN KEY (
+	cancelStatusCode
+)
+REFERENCES cancelStatus (
+	cancelStatusCode
+);
+
+ALTER TABLE QueryBoard ADD 
+FOREIGN KEY (
+	memberSeq
+)
+REFERENCES Member (
+	memberSeq
+);
+
+ALTER TABLE Reply ADD 
+FOREIGN KEY (
+	boardSeq
+)
+REFERENCES QueryBoard (
+	querySeq
+);
+
+ALTER TABLE Reply ADD 
+FOREIGN KEY (
+	memberSeq
+)
+REFERENCES Member (
+	memberSeq
+);
+
+ALTER TABLE Reply ADD 
+FOREIGN KEY (
+	commentRef
+)
+REFERENCES Reply (
+	commentSeq
+);
+
+ALTER TABLE couponlog ADD 
+FOREIGN KEY (
+	CouponSeq
+)
+REFERENCES issuedCoupon (
+	CouponSeq
+);
+
+ALTER TABLE couponlog ADD 
+FOREIGN KEY (
+	couponStatusChangeCode
+)
+REFERENCES couponStatusChange (
+	couponStatusChangeCode
+);
+
+ALTER TABLE mileageLog ADD 
+FOREIGN KEY (
+	mileageLogType
+)
+REFERENCES mileageType (
+	mileageLogType
+);
+
+ALTER TABLE mileageLog ADD 
+FOREIGN KEY (
+	memberSeq
+)
+REFERENCES Member (
+	memberSeq
+);
+
+ALTER TABLE subCategory ADD 
+FOREIGN KEY (
+	majorCategoryCode
+)
+REFERENCES majorCategory (
+	majorCategoryCode
+);
+
+ALTER TABLE Notice ADD 
+FOREIGN KEY (
+	memberSeq
+)
+REFERENCES Member (
+	memberSeq
+);
+
+ALTER TABLE Review ADD 
+FOREIGN KEY (
+	memberSeq
+)
+REFERENCES Member (
+	memberSeq
+);
+
+ALTER TABLE Review ADD 
+FOREIGN KEY (
+	productCode, displayListSeq
+)
+REFERENCES DPOption (
+	productCode, displayListSeq
+);
+
+ALTER TABLE Images ADD 
+FOREIGN KEY (
+	boardCode
+)
+REFERENCES boardType (
+	boardCode
+);
+
+ALTER TABLE MemberLog ADD 
+FOREIGN KEY (
+	memberSeq
+)
+REFERENCES Member (
+	memberSeq
+);
+
+-- 시퀀스생성
+
+CREATE SEQUENCE member_log_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE member_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE query_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE notice_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE review_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE comment_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE instock_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE mileage_log_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE address_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE coupon_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE coupon_log_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE order_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE order_change_seq
+NOCYCLE    
+NOCACHE;
+
+CREATE SEQUENCE display_list_seq
+NOCYCLE    
+NOCACHE;
+
+
+-- 컬럼추가생성
+alter table orderList add orderTime timestamp not null; 
+alter table orderChange add ordercancelTime timestamp not null;
+ALTER TABLE QUERYBOARD ADD orderSeq NUMBER;
+ALTER TABLE ORDERLIST ADD shipmentFee NUMBER;
+ALTER TABLE ADDRESSLIST ADD receiverName VARCHAR2(21);
+ALTER TABLE ISSUEDCOUPON ADD expiryDate TIMESTAMP;
+ALTER TABLE COUPONMASTER DROP COLUMN LIMITDATE;
+
+-- insert code
+
+insert into majorcategory values ('01','채소');
+insert into majorcategory values ('02','과일');
+insert into majorcategory values ('03','견과·곡류');
+insert into majorcategory values ('04','수산');
+insert into majorcategory values ('05','정육·계란');
+insert into majorcategory values ('06','유제품');
+insert into majorcategory values ('07','반찬');
+insert into majorcategory values ('08','소스·장류');
+insert into majorcategory values ('09','오일·식초·면');
+insert into majorcategory values ('10','향신료·조미료');
+
+
+insert into subcategory values ('V01','01','잎채소');
+insert into subcategory values ('V02','01','마늘·파·양파');
+insert into subcategory values ('V03','01','뿌리채소');
+insert into subcategory values ('V04','01','고추·호박·오이·가지');
+insert into subcategory values ('V05','01','나물');
+insert into subcategory values ('V06','01','버섯');
+insert into subcategory values ('V07','01','기타');
+
+insert into subcategory values ('F01','02','생과일');
+insert into subcategory values ('F02','02','냉동과일');
+insert into subcategory values ('F03','02','건과일');
+insert into subcategory values ('F04','02','잼·주스·통조림');
+
+insert into subcategory values ('G01','03','쌀');
+insert into subcategory values ('G02','03','잡곡');
+insert into subcategory values ('G03','03','견과');
+
+insert into subcategory values ('S01','04','생선류');
+insert into subcategory values ('S02','04','조개류');
+insert into subcategory values ('S03','04','해조류');
+insert into subcategory values ('S04','04','건어물');
+insert into subcategory values ('S05','04','오징어·낙지·문어');
+insert into subcategory values ('S06','04','새우·게·랍스터');
+
+insert into subcategory values ('M01','05','돼지고기');
+insert into subcategory values ('M02','05','소고기');
+insert into subcategory values ('M03','05','닭고기·오리고기');
+insert into subcategory values ('M04','05','계란');
+insert into subcategory values ('M05','05','양념육');
+
+insert into subcategory values ('D01','06','우유');
+insert into subcategory values ('D02','06','치즈');
+insert into subcategory values ('D03','06','버터');
+insert into subcategory values ('D04','06','요거트');
+
+insert into subcategory values ('C01','07','젓갈');
+insert into subcategory values ('C02','07','국·탕·찌개');
+insert into subcategory values ('C03','07','햄·소세지');
+insert into subcategory values ('C04','07','두부·어묵');
+insert into subcategory values ('C05','07','통조림');
+
+insert into subcategory values ('P01','08','액젓');
+insert into subcategory values ('P02','08','장류');
+insert into subcategory values ('P03','08','양념·소스');
+
+insert into subcategory values ('I01','09','오일');
+insert into subcategory values ('I02','09','식초');
+insert into subcategory values ('I03','09','면');
+
+insert into subcategory values ('H01','10','소금');
+insert into subcategory values ('H02','10','허브');
+insert into subcategory values ('H03','10','시즈닝·스탁');
+
+
+--select * from boardtype;
+insert into boardtype values ('BL', '판매게시판');
+insert into boardtype values ('BN', '공지사항');
+insert into boardtype values ('BQ', '문의게시판');
+insert into boardtype values ('BR', '리뷰게시판');
+
+-- select * from mileageType;
+insert into mileageType values ('MMU', '상품결제사용');
+insert into mileageType values ('MMA', '관리자회수');
+insert into mileageType values ('MPB', '상품구매적립');
+insert into mileageType values ('MPR', '리뷰적립');
+insert into mileageType values ('MPPR', '포토리뷰적립');
+insert into mileageType values ('MPN', '회원가입적립');
+insert into mileageType values ('MPE', '이벤트적립');
+insert into mileageType values ('MPC', '구매취소');
+insert into mileageType values ('MPA', '관리자부여');
+
+--select * from MemberGrade;
+insert into MemberGrade values ('NEW', '일반', 0.005); --가입시, 15만원 미만
+insert into MemberGrade values ('BRZ', '브론즈', 0.01); -- 15만원 이상
+insert into MemberGrade values ('SLV', '실버', 0.03); -- 30만원 이상
+insert into MemberGrade values ('GLD', '골드', 0.05); -- 50만원 이상
+insert into MemberGrade values ('PLT', '플래티넘', 0.07); -- 100만원 이상
+insert into MemberGrade values ('DIA', '다이아', 0.07); -- 150만원 이상, 특별혜택
+
+--select * from orderStatus;
+insert into orderStatus values ('OS01', '결제완료');
+insert into orderStatus values ('OS02', '출고대기');
+insert into orderStatus values ('OS03', '배송중');
+insert into orderStatus values ('OS04', '배송완료');
+insert into orderStatus values ('OS05', '구매확정');
+
+--select * from cancelstatus;
+insert into cancelStatus values ('CS01', '취소요청');
+insert into cancelStatus values ('CS02', '취소완료');
+insert into cancelStatus values ('RS01', '반품요청');
+insert into cancelStatus values ('ES01', '교환요청');
+insert into cancelStatus values ('RS02', '회수시작');
+insert into cancelStatus values ('RS03', '회수중');
+insert into cancelStatus values ('RS04', '회수완료');
+insert into cancelStatus values ('RS05', '반품완료');
+insert into cancelStatus values ('ES02', '교환상품발송');
+insert into cancelStatus values ('ES03', '교환완료');
+
+--select * from couponstatuschange;
+insert into couponstatuschange values ('CPR', '회원가입');
+insert into couponstatuschange values ('CMU', '상품결제사용');
+insert into couponstatuschange values ('CMR', '관리자회수');
+insert into couponstatuschange values ('CME', '사용기간만료');
+insert into couponstatuschange values ('CPM', '월간쿠폰');
+insert into couponstatuschange values ('CPE', '이벤트발급');
+insert into couponstatuschange values ('CPC', '결제취소');
+insert into couponstatuschange values ('CPA', '관리자발급');
+
+commit;
+select * from member;
+
+SELECT * FROM 
+    (SELECT ROWNUM AS "RNUM", A.*,
+        (SELECT count(*) FROM DPOPTION WHERE A.displayListSeq=displayListSeq and optionAvailable != 'N') as "OPTIONCOUNT",
+        (SELECT max(renameFile) FROM IMAGES WHERE BOARDCODE = 'BL' AND displayListSeq = boardNo) AS "IMG"
+        FROM (select * from dplist left join (select displayListSeq, min(displayOptionPrice) as "MINPRICE", min(discountRate) as "DISCOUNTRATE",  min(discountName) as "DISCOUNTNAME", min(subCategoryCode) as "SUBCATEGORYCODE",
+        min(subCategoryName) as "SUBCATEGORYNAME", min(majorCategoryCode) as "MAJORCATEGORYCODE", min(majorCategoryName) as "MAJORCATEGORYNAME" , trunc(avg(reviewScore),2) as "REVIEWSCORE", count(reviewScore) as "POPULARITY",
+        min(productUnit) as "PRODUCTUNIT", min(productCode) as "PRODUCTCODE"
+        from DPOption
+        left join discount using(discountCode)
+        join product using(productCode)
+        join subCategory using(subCategoryCode)
+        join majorCategory using(majorCategoryCode)
+        left join review using(productCode, displayListSeq)
+        where optionAvailable != 'N' group by displayListSeq) using(displayListSeq)
+    where DPLISTAVAILABLE != 'N' and (displayListTitle like '%%' OR SUBCATEGORYNAME like '%%' OR MAJORCATEGORYNAME like '%%') AND SUBCATEGORYCODE like '%%' AND MAJORCATEGORYCODE like '%%'
+    order by dplistavailable DESC, DISCOUNTRATE DESC NULLS LAST)
+A WHERE ROWNUM <= 9999)
+WHERE RNUM >= 00000;
